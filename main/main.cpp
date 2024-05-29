@@ -49,8 +49,7 @@ bool convergencia(float matrix[][3]) {
     }
 }
 
-void solucaoInicial(float matrix[][3], float* d, float* solucaoInicial) {
-    solucaoInicial[0] = d[0]
+void solucaoInicialFuncao(float matrix[][3], float* d, float solucaoInicial[][10]) {
     for(int i = 0; i < 3; i++) {
         solucaoInicial[i][0] = d[i]/matrix[i][i];
     }
@@ -61,9 +60,48 @@ void solucaoInicial(float matrix[][3], float* d, float* solucaoInicial) {
     system("cls");
 }
 
-void condicaoParada(float matrix[][3], float* d, float solucaoInicial[][10], int k = 0) {
-    solucaoInicial[0][k+1] = (d[0] - matrix[0][1] + solucaoInicial[1][k] - matrix[0][2] + solucaoInicial[2][k])*(1/matrix[0][0]);
-    solucaoInicial[1][k+1] = (d[1] - matrix[1][0] + solucaoInicial[0][k+1] - matrix[1][2] + solucaoInicial[2][k])*(1/matrix[1][1]);
+void condicaoParada(float matrix[][3], float* d, float solucaoInicial[][10], float e, int k) {
+    cout << k+1 << " Iteracao\n";
+    for(int i = 0; i < 3; i++) {
+        cout << "| " << solucaoInicial[i][k] << " |\n";
+    }
+    getch();
+    solucaoInicial[0][k+1] = (d[0] - matrix[0][1] * solucaoInicial[1][k] - matrix[0][2] * solucaoInicial[2][k])*(1/matrix[0][0]);
+    solucaoInicial[1][k+1] = (d[1] - matrix[1][0] * solucaoInicial[0][k+1] - matrix[1][2] * solucaoInicial[2][k])*(1/matrix[1][1]);
+    solucaoInicial[2][k+1] = (d[2] - matrix[2][0] * solucaoInicial[0][k+1] - matrix[2][1] * solucaoInicial[1][k+1])*(1/matrix[2][2]);
+    float x = solucaoInicial[0][k+1], y = solucaoInicial[1][k+1], z = solucaoInicial[2][k+1], er, maiorValor;
+    x < 0 ? x *= -1 : x;
+    y < 0 ? y *= -1 : y;
+    z < 0 ? z *= -1 : z;
+    if(x > y && x > z) {
+        maiorValor = x;
+    } else if(y > x && y > z) {
+        maiorValor = y;
+    } else {
+        maiorValor = z;
+    }
+    x = solucaoInicial[0][k+1] - solucaoInicial[0][k];
+    y = solucaoInicial[1][k+1] - solucaoInicial[1][k];
+    z = solucaoInicial[2][k+1] - solucaoInicial[2][k];
+    x < 0 ? x *= -1 : x;
+    y < 0 ? y *= -1 : y;
+    z < 0 ? z *= -1 : z;
+    if(x > y && x > z) {
+        er = x/maiorValor;
+    } else if(y > x && y > z) {
+        er = y/maiorValor;
+    } else {
+        er = z/maiorValor;
+    }
+    if(er > e) {
+        condicaoParada(matrix, d, solucaoInicial, e, k+1);
+    } else {
+        cout << er << " <= " << e << endl;
+        for(int i = 0; i < 3; i++) {
+            cout << "| " << solucaoInicial[i][k+1] << " |\n";
+        }
+        return;
+    }
 }
 
 int main()
@@ -77,8 +115,8 @@ int main()
     if(convergencia(matrix)) {
         getch();
         system("cls");
-        solucaoInicial(matrix, d, solucaoInicial);
-
+        solucaoInicialFuncao(matrix, d, solucaoInicial);
+        condicaoParada(matrix, d, solucaoInicial, 0.05, 0);
     }
 
     return 0;
