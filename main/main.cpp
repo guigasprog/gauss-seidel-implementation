@@ -1,5 +1,4 @@
 #include <iostream>
-#include <conio.h>
 
 using namespace std;
 
@@ -21,7 +20,7 @@ void definindoValores(float matrix[][3], float* d) {
         }
         cout << "|= " << d[i] << "\n";
     }
-    getch();
+    system("pause");
     system("cls");
 }
 
@@ -56,7 +55,7 @@ void solucaoInicialFuncao(float matrix[][3], float* d, float solucaoInicial[][10
     for(int i = 0; i < 3; i++) {
         cout << "| " << solucaoInicial[i][0] << " |\n";
     }
-    getch();
+    system("pause");
     system("cls");
 }
 
@@ -65,7 +64,7 @@ void condicaoParada(float matrix[][3], float* d, float solucaoInicial[][10], flo
     for(int i = 0; i < 3; i++) {
         cout << "| " << solucaoInicial[i][k] << " |\n";
     }
-    getch();
+    system("cls");
     solucaoInicial[0][k+1] = (d[0] - matrix[0][1] * solucaoInicial[1][k] - matrix[0][2] * solucaoInicial[2][k])*(1/matrix[0][0]);
     solucaoInicial[1][k+1] = (d[1] - matrix[1][0] * solucaoInicial[0][k+1] - matrix[1][2] * solucaoInicial[2][k])*(1/matrix[1][1]);
     solucaoInicial[2][k+1] = (d[2] - matrix[2][0] * solucaoInicial[0][k+1] - matrix[2][1] * solucaoInicial[1][k+1])*(1/matrix[2][2]);
@@ -113,7 +112,7 @@ int main()
     definindoValores(matrix,d);
 
     if(convergencia(matrix)) {
-        getch();
+        system("pause");
         system("cls");
         solucaoInicialFuncao(matrix, d, solucaoInicial);
         condicaoParada(matrix, d, solucaoInicial, 0.05, 0);
